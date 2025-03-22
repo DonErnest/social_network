@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network/models/user.dart';
+import 'package:social_network/services/user.dart';
 
 class UserForm extends StatefulWidget {
   final User currentUser;
@@ -7,19 +8,22 @@ class UserForm extends StatefulWidget {
     required String newFirstName,
     required String newLastName,
   })
-  onUserUpdated;
+  updateUser;
+
+  final void Function() updateSubscriptions;
 
   const UserForm({
     super.key,
     required this.currentUser,
-    required this.onUserUpdated,
+    required this.updateUser,
+    required this.updateSubscriptions,
   });
 
   @override
-  State<UserForm> createState() => _UserFormState();
+  State<UserForm> createState() => UserFormState();
 }
 
-class _UserFormState extends State<UserForm> {
+class UserFormState extends State<UserForm> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
 
@@ -54,12 +58,20 @@ class _UserFormState extends State<UserForm> {
 
   Future<void> onButtonPressed() async {
     if (_editedFirstName != null && _editedLastName != null) {
-      await widget.onUserUpdated(
+      await widget.updateUser(
         newFirstName: _editedFirstName!,
         newLastName: _editedLastName!,
       );
       onCanceled();
     }
+  }
+
+  Future<void> onSubscriptionsCleared() async {
+    await clearSubscriptions(widget.currentUser.email);
+    if (mounted) {
+      onCanceled();
+    }
+    widget.updateSubscriptions();
   }
 
   @override
@@ -79,6 +91,10 @@ class _UserFormState extends State<UserForm> {
             controller: lastNameController,
             onChanged: (value) => setState(() => _editedLastName = value),
             decoration: const InputDecoration(label: Text("new last name")),
+          ),
+          ElevatedButton(
+            onPressed: onSubscriptionsCleared,
+            child: const Text("Clear Subscriptions"),
           ),
           Row(
             children: [

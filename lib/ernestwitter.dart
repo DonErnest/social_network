@@ -7,6 +7,7 @@ import 'package:social_network/services/user.dart';
 
 import 'enums.dart';
 import 'models/user.dart';
+import 'screens/subscription_form.dart';
 
 class ErnesTwitter extends StatefulWidget {
   const ErnesTwitter({super.key});
@@ -17,6 +18,9 @@ class ErnesTwitter extends StatefulWidget {
 
 class _ErnesTwitterState extends State<ErnesTwitter> {
   Screen currentScreen = Screen.login;
+  final GlobalKey<PostFeedState> _postsScreenKey = GlobalKey();
+  final GlobalKey<UserFormState> _userFormKey = GlobalKey();
+
   User? user;
 
   Destination get getCurrentDestination {
@@ -30,15 +34,52 @@ class _ErnesTwitterState extends State<ErnesTwitter> {
       return Destination(
         type: Screen.feed,
         screenTitle: Text(user!.fullName),
-        screen: PostFeed(user: user!),
+        screen: PostFeed(key: _postsScreenKey, user: user!),
         appBarActions: [
+          IconButton(
+            onPressed: openSubscriptionModal,
+            icon: Icon(Icons.person_search_outlined),
+          ),
           IconButton(onPressed: openEditUserModal, icon: Icon(Icons.settings)),
+          IconButton(onPressed: logout, icon: Icon(Icons.exit_to_app)),
         ],
       );
     }
   }
 
-  Future<void> editUser({required String newFirstName, required String newLastName}) async {
+  void logout() {
+    setState(() {
+      user = null;
+      currentScreen = Screen.login;
+    });
+  }
+
+  void openSubscriptionModal() {
+    showModalBottomSheet(
+      context: context,
+      builder:
+          (ctx) => SubscriptionForm(
+            subscriberEmail: user!.email,
+            onSubscriptionRequested: subscriptionsUpdated,
+          ),
+    );
+  }
+
+  void _clearPosts() {
+    _postsScreenKey.currentState
+        ?.refreshPosts(); // Call a method to reset the child's state
+  }
+
+  void subscriptionsUpdated() {
+    setState(() {
+      _clearPosts();
+    });
+  }
+
+  Future<void> editUser({
+    required String newFirstName,
+    required String newLastName,
+  }) async {
     final updatedUser = await updateAndReturnUser(
       email: user!.email,
       data: {"firstName": newFirstName, "lastName": newLastName},
@@ -53,10 +94,13 @@ class _ErnesTwitterState extends State<ErnesTwitter> {
   void openEditUserModal() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => UserForm(
-        currentUser: user!,
-        onUserUpdated: editUser,
-      ),
+      builder:
+          (ctx) => UserForm(
+            key: _userFormKey,
+            currentUser: user!,
+            updateUser: editUser,
+            updateSubscriptions: subscriptionsUpdated
+          ),
     );
   }
 

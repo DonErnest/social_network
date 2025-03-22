@@ -14,10 +14,10 @@ class PostFeed extends StatefulWidget {
   const PostFeed({super.key, required this.user});
 
   @override
-  State<PostFeed> createState() => _PostFeedState();
+  State<PostFeed> createState() => PostFeedState();
 }
 
-class _PostFeedState extends State<PostFeed> {
+class PostFeedState extends State<PostFeed> {
   late final ScrollController _scrollController;
 
   List<Post> posts = [];
@@ -25,6 +25,16 @@ class _PostFeedState extends State<PostFeed> {
   bool needsScroll = false;
 
   Timer? _timer;
+
+  Future<void> refreshPosts() async {
+    setState(() {
+      posts = [];
+      lastPostDateTime = null;
+      _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
+        await updatePosts();
+      });
+    });
+  }
 
   Future<void> updatePosts() async {
     final newPosts = await getPosts(widget.user.email, lastPostDateTime);
@@ -74,6 +84,7 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   void initState() {
+    print("Я здесь");
     _scrollController = ScrollController();
     super.initState();
     startFetching();

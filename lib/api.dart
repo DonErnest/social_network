@@ -24,6 +24,7 @@ Future<String?> postData (String path, Object? data) async {
   final uri = Uri.parse("${baseUrl}${path}");
   try {
     final response = await post(uri, body: data);
+    print(response.body);
     if (response.statusCode == 200) {
       return response.body;
     }

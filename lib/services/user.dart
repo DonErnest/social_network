@@ -23,3 +23,20 @@ Future<User?> updateAndReturnUser({required String email, required Object data})
   final decodedData = await decodeData(rawData);
   return parseUserData(decodedData);
 }
+
+Future<bool> subscribeToUser(String email, String influencerEmail) async {
+  final rawData = await postData("${email}/subscribe", {"email": influencerEmail});
+  final decodedData = await decodeData(rawData);
+  if (decodedData != null) {
+    return true;
+  }
+  return false;
+}
+
+Future<bool> clearSubscriptions(String email) async {
+  final rawData = await postData("${email}/subscribe/delete", null);
+  if (rawData != null) {
+    return true;
+  }
+  return false;
+}

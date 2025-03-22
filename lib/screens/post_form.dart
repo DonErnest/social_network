@@ -60,7 +60,7 @@ class _PostFormState extends State<PostForm> {
               const Spacer(),
               ElevatedButton(
                 onPressed: onButtonPressed,
-                child: const Text("Save"),
+                child: const Text("Send"),
               ),
             ],
           ),
