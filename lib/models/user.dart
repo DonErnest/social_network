@@ -12,4 +12,6 @@ class User {
   }
 
   const User({required this.email, required this.firstName, required this.lastName});
+
+  String get fullName => "${firstName} ${lastName}";
 }
