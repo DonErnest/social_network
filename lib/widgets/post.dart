@@ -13,7 +13,7 @@ class PostCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.album),
+            leading: Icon(Icons.speaker_notes),
             title: Text(post.message),
             subtitle: Text(
               'by: ${post.author}\n'

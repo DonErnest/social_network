@@ -4,6 +4,15 @@ import 'dart:convert';
 
 import 'package:social_network/api.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/util.dart';
+
+
+Post? parsePostData(dynamic postData) {
+  if (postData != null) {
+    return Post.fromJson(postData);
+  }
+  return null;
+}
 
 Future<dynamic> getPostsData (String email, String? query) async {
   var path = "${email}/posts";
@@ -29,4 +38,10 @@ Future<List<Post>> getPosts (String email, DateTime? lastPosted) async {
         decodedData.map((json) => Post.fromJson(json)).toList());
   }
   return [];
+}
+
+Future<Post?> uploadPost({required String email, required String text}) async {
+  final rawData = await postData("${email}/posts", {"message": text});
+  final decodedData = await decodeData(rawData);
+  return parsePostData(decodedData);
 }

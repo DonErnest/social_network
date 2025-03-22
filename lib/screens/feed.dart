@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/models/user.dart';
+import 'package:social_network/screens/post_form.dart';
 import 'package:social_network/services/post.dart';
 import 'package:social_network/widgets/canvas.dart';
 import 'package:social_network/widgets/post.dart';
@@ -31,6 +32,8 @@ class _PostFeedState extends State<PostFeed> {
       setState(() {
         needsScroll = true;
         posts = posts + newPosts;
+        lastPostDateTime = posts.last.datetime;
+
         if (needsScroll) {
           WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
           needsScroll = false;
@@ -62,6 +65,13 @@ class _PostFeedState extends State<PostFeed> {
     super.dispose();
   }
 
+  void openEditUserModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => PostForm(email: widget.user.email),
+    );
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -71,11 +81,29 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   Widget build(BuildContext context) {
+    var startingFromFreshPosts = posts.reversed.toList();
     return ScreenCanvas(
-      widget: ListView.builder(
-        controller: _scrollController,
-        itemCount: posts.length,
-        itemBuilder: (ctx, idx) => PostCard(post: posts[idx]),
+      widget: Column(
+        children: [
+          Expanded(
+            flex: 12,
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: startingFromFreshPosts.length,
+              itemBuilder: (ctx, idx) => PostCard(post: startingFromFreshPosts[idx]),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: openEditUserModal,
+                child: Text("Add Post"),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
