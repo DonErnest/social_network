@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:social_network/services/user.dart';
+
+import '../util.dart';
 
 class SubscriptionForm extends StatefulWidget {
   final String subscriberEmail;
@@ -51,7 +54,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
         children: [
           TextField(
             controller: emailController,
-            onChanged: (value) => setState(() => _influencerEmail = value),
+            onChanged: (value) => {isValidEmail(value)? setState(() => _influencerEmail = value) : null},
             decoration: const InputDecoration(label: Text("enter influencer email")),
           ),
           Row(

@@ -92,6 +92,7 @@ class PostFeedState extends State<PostFeed> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     var startingFromFreshPosts = posts.reversed.toList();
     return ScreenCanvas(
       widget: Column(
@@ -108,9 +109,12 @@ class PostFeedState extends State<PostFeed> {
             flex: 1,
             child: SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: openEditUserModal,
-                child: Text("Add Post"),
+                child: Text(
+                    "Add Post",
+                    style: TextStyle(fontSize: theme.textTheme.headlineMedium!.fontSize),
+                ),
               ),
             ),
           ),

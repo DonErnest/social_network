@@ -27,13 +27,13 @@ class _ErnesTwitterState extends State<ErnesTwitter> {
     if (currentScreen == Screen.login) {
       return Destination(
         type: Screen.login,
-        screenTitle: Text("Login"),
+        screenTitle: "Login",
         screen: LoginScreen(onUserSaved: setUser),
       );
     } else {
       return Destination(
         type: Screen.feed,
-        screenTitle: Text(user!.fullName),
+        screenTitle: user!.fullName,
         screen: PostFeed(key: _postsScreenKey, user: user!),
         appBarActions: [
           IconButton(
@@ -58,7 +58,8 @@ class _ErnesTwitterState extends State<ErnesTwitter> {
     showModalBottomSheet(
       context: context,
       builder:
-          (ctx) => SubscriptionForm(
+          (ctx) =>
+          SubscriptionForm(
             subscriberEmail: user!.email,
             onSubscriptionRequested: subscriptionsUpdated,
           ),
@@ -95,11 +96,12 @@ class _ErnesTwitterState extends State<ErnesTwitter> {
     showModalBottomSheet(
       context: context,
       builder:
-          (ctx) => UserForm(
-            key: _userFormKey,
-            currentUser: user!,
-            updateUser: editUser,
-            updateSubscriptions: subscriptionsUpdated
+          (ctx) =>
+          UserForm(
+              key: _userFormKey,
+              currentUser: user!,
+              updateUser: editUser,
+              updateSubscriptions: subscriptionsUpdated
           ),
     );
   }
@@ -114,9 +116,13 @@ class _ErnesTwitterState extends State<ErnesTwitter> {
   @override
   Widget build(BuildContext context) {
     var destination = getCurrentDestination;
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: destination.screenTitle,
+        title: Text(
+          destination.screenTitle,
+          style: theme.textTheme.displaySmall,
+        ),
         actions: destination.appBarActions,
       ),
       body: destination.screen,

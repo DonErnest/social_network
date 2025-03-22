@@ -3,7 +3,7 @@ import 'package:social_network/enums.dart';
 
 class Destination {
   final Screen type;
-  final Widget screenTitle;
+  final String screenTitle;
   final List<Widget>? appBarActions;
   final Widget screen;
 

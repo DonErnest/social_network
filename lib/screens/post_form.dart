@@ -51,7 +51,7 @@ class _PostFormState extends State<PostForm> {
           TextField(
             controller: postTextController,
             onChanged: (value) => setState(() => _postText = value),
-            decoration: const InputDecoration(label: Text("new first name")),
+            decoration: const InputDecoration(label: Text("enter your precious thoughts")),
             maxLines: 6,
           ),
           Row(
