@@ -20,15 +20,15 @@ Future<String?> fetchData(String path) async {
   return null;
 }
 
-Future<bool> postData (String path, Object? data) async {
+Future<String?> postData (String path, Object? data) async {
   final uri = Uri.parse("${baseUrl}${path}");
   try {
     final response = await post(uri, body: data);
     if (response.statusCode == 200) {
-      return true;
+      return response.body;
     }
   } catch (error) {
-    return false;
+    return null;
   }
-  return false;
+  return null;
 }

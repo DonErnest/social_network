@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   Future<void> onButtonPressed () async {
     if (_email != null) {
-      final user = await createAndReturnUser(_email!);
+      final user = await getOrCreateUser(_email!);
       if (user != null) {
         widget.onUserSaved(user);
       }
